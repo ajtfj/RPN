@@ -29,7 +29,7 @@ def scanner(file):
             tokens.append(t)
         else:
             try:
-                num = int(line)
+                num = float(line)
                 t = Token("NUM", num)
                 tokens.append(t)
             except ValueError:
@@ -74,8 +74,8 @@ def main():
 
     tokens = scanner(file)
 
-    for t in tokens:
-        print(t)
+    for token in tokens:
+        print(token)
 
     rpnStacker(tokens)
 
