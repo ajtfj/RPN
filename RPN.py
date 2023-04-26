@@ -1,39 +1,41 @@
-stack = []
+from Scanner import *
 
-with open('input.txt', 'r') as file:
-    for line in file:
-        line = line.strip()
-        if not line:
+def rpnStacker(tokens):
+    stack = []
+    for token in tokens:
+        if token.type == TokenType.NUM:
+            stack.append(float(token.lexeme))
             continue
 
-        if line in ['+','-','/','*']:
-            if len(stack) < 2:
-                print("Not enough operators")
-                break
+        if len(stack) < 2:
+            raise MalformedInput()
 
-            op2 = stack.pop()
-            op1 = stack.pop()
+        op2 = stack.pop()
+        op1 = stack.pop()
+        if token.type == TokenType.PLUS:
+            result = op1 + op2
+        if token.type == TokenType.MINUS:
+            result = op1 - op2
+        if token.type == TokenType.STAR:
+            result = op1 * op2
+        if token.type == TokenType.SLASH:
+            result = op1 / op2
 
-            if line == '+':
-                result = op1 + op2
-            elif line == '-':
-                result = op1 - op2
-            elif line == '*':
-                result = op1 * op2
-            elif line == '/':
-                result = op1 / op2
-            
-            stack.append(result)
+        stack.append(result)
 
-        else:
-            try:
-                num = int(line)
-                stack.append(num)
-            except ValueError:
-                print("Invalid input")
-                break
+    if len(stack) != 1:
+        raise MalformedInput()
 
-if len(stack) != 1:
-    print("Invalid input")
-else:
     print("Result:", stack.pop())
+
+def main():
+    with open('input.txt', 'r') as file:
+        tokens = scanner(file)
+
+    for token in tokens:
+        print(token)
+
+    rpnStacker(tokens)
+
+if __name__ == "__main__":
+    main()
